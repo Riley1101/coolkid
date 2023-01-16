@@ -1,5 +1,4 @@
-use core::num;
-
+#[allow(unused_variables)]
 fn main() {
     let greetings = "Hello";
     let subject = "World";
@@ -71,30 +70,126 @@ fn main() {
 }
 
 fn sandbox(){
-    let y = {
-        let x = 3;
-        x + 1
-    };
-    let sum = y + plus_one(12);
-    println!("result is {sum}");
-
-    if sum < 12{
-        println!(" condition is true")
-    }else {
-        println!("Condition is false")
-    }
-
-    if sum != 0  {
-        println!(" the sum is there ")
-    };
-
-    let result : bool = divisible_by_3(12);
+     let result : bool = divisible_by_3(12);
     println!("{} this is the result here ", result);
     println!("five or six {}",five_or_six(true));
     println!("this is the counter value {}",counter(12));
     count_up_down(12);
     say_hello_time(12);
-    access_array([12,32,43,54,65])
+    access_array([12,32,43,54,65]);
+    string_sandbox();
+    ownership_and_functions();
+    references_and_borrow();
+    slice_type()
+}
+
+fn slice_type(){
+    fn first_word(s:&String)->usize{
+        let bytes = s.as_bytes();
+        for (i,&item) in bytes.iter().enumerate(){
+            if item == b' '{
+                println!("{i}");
+                return i;
+            }
+        }
+        s.len()
+    }
+    let s1 = String::from("Hello string");
+    let slice1 = &s1[..];
+    println!("{slice1}");
+    println!("{s1}");
+
+    fn first_word_slice(s:&String)->&str{
+        let bytes = s.as_bytes();
+
+        for(i , &item) in bytes.iter().enumerate(){
+            if item == b' '{
+                return &s[0..i];
+            }
+        }
+        &s[..]
+    }
+    let s2 :String = String::from("Hello string 2 ");
+
+    let word2 = first_word_slice(&s2);
+    println!("{word2}");
+
+    fn arr_slices(){
+        let a = [1,2,3,4,5];
+        let slice = &a[1..3];
+    } 
+
+}
+
+fn references_and_borrow(){
+    let mut s = String::from("Hello world");
+    fn calculate_area (s1:&mut String){
+        s1.push_str("Add new value ");
+        println!("The length of the string is {}", s1.len());
+    }
+    calculate_area(&mut s);
+    println!("{}",s);
+}
+
+fn string_sandbox(){
+    // String literals are unknown at runtime
+    let mut s = String::from("Hello world");
+    s.push_str("is the start");
+    println!("{}", s);
+
+    let str = "Hello";
+    println!("{str}");
+
+    // copied the stack
+    let s1 = String::from("Hello new String with Heap");
+    let s2 = s1;
+    println!("{s2}");
+
+    // deep copy the entire heap
+    let s3 = s2.clone();
+    println!("s2 = {}, s3 = {}", s2,s3);
+
+    // literals dont have extensive deep copy
+    let n1 = 32;
+    let n2 = n1;
+    println!("n1 is {n1} n2 is {n2}");
+
+    // let reference_to_nothing = dangle();
+    // println!(reference_to_nothing)
+}
+
+// fn dangle()->&String{
+//     let s = String::from("Hello");
+//     return  &s
+// }
+fn ownership_and_functions(){
+    fn takes_ownership(str : String){
+        println!("{str} , i took the ownership")
+    }
+
+    fn make_copy(num: i32){
+        println!("{}", num)
+    }
+    let s = String::from("Hello Owner !");
+
+    let num :i32 = 32;
+    make_copy(num);
+    takes_ownership(s);
+
+    fn takes_and_gives(str: String)->String{
+        str
+    }
+    let s2 = String::from("Hello string 2 ");
+    let s4 = takes_and_gives(s2);
+    println!("Takes and gives {}",s4);
+    // println!("{s2}, I will throw an error");
+
+    fn calculate_length(s:String)->(String, usize){
+        let length = s.len();
+        (s, length)
+    }
+    let (s5, len ) = calculate_length(s4);
+    println!(" Return ownership {}",s5)
 }
 
 fn counter(limit :i32)->i32{
@@ -172,7 +267,7 @@ fn access_array(arr:[i32; 5],){
         println!("there we have {}",element)
     }
     
-    for number in (1..4){
+    for number in 1..4{
         println!("{number} !!!!")
     }
 }
