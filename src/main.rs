@@ -1,3 +1,6 @@
+mod structs;
+mod enums;
+
 #[allow(unused_variables)]
 fn main() {
     let greetings = "Hello";
@@ -67,6 +70,9 @@ fn main() {
     println!("It is an {}",message);
     say_loud(21.2);
     sandbox(); 
+    // here comes the modules
+    structs::main();
+    enums::main();
 }
 
 fn sandbox(){
@@ -80,7 +86,61 @@ fn sandbox(){
     string_sandbox();
     ownership_and_functions();
     references_and_borrow();
-    slice_type()
+    slice_type();
+    struct_and_structures()
+}
+fn struct_and_structures(){
+    struct User {
+        name : String,
+        email : String,
+        active : bool,
+        sign_in_count : u64
+    }
+
+    let user1 = User {
+        name : String::from("Arkar @ Inspiring"),
+        email : String::from("arkar@inspiring.com"),
+        active : true ,
+        sign_in_count: 3
+    };
+    println!("user name is {}",user1.name);
+
+    let mut user2 :User = User { name: String::from("john"), email: String::from("arkar@gmail"), active: true, sign_in_count: 2 };
+
+    println!("User is mutable with the name {}",user2.name);
+    user2.name = String::from("John doe");
+    println!("User name is mutated into {}", user2.name);
+
+    fn build_user(email:String , username :String)-> User{
+        User {
+            name : username,
+            email,
+            active: true,
+            sign_in_count:2
+        }
+    }
+
+    let user3 = build_user(String::from("john@gmail"), String::from("More"));
+    println!("{} is user3 ", user3.name);
+
+    let user4 = User {
+        name:String::from("user4 "),
+        ..user3
+    };
+    println!("{} is cloned from user4",user4.name);
+
+    struct Color(i32, i32, i32 );
+    struct  Points(i32, i32 ,i32 );
+
+    let black = Color(0, 0,0);
+    let origin :Points = Points(0, 0, 0);
+    println!("{}", black.0);
+    println!("{}", origin.1);
+    
+    // using references with struct
+  
+    
+
 }
 
 fn slice_type(){
